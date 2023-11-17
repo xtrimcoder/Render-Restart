@@ -1,5 +1,8 @@
 const cron = require('node-cron');
 const axios = require('axios');
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 const restartServer = async () => {
   try {
@@ -13,8 +16,23 @@ const restartServer = async () => {
   }
 };
 
+
 // Schedule the cron job to run every 14 minutes
 cron.schedule('*/14 * * * *', () => {
   console.log('Running the restartServer cron job');
   restartServer();
+});
+
+app.get("/restart",(req,res)=>{
+  restartServer();
+  res.send("Server restarted")
+})
+
+app.get("/",(req,res)=>{
+  res.send("Vishal Sharma")
+})
+
+app.listen(PORT, err => {
+  if (err) throw err;
+  console.log(`Server started on port: ${PORT}`);
 });
